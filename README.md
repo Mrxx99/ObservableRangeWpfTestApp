@@ -12,3 +12,5 @@ The range operations Add/Remove/Replace currently throw an exception that range 
   - After doing changes, always rebuild this test app before running again.
   - You can easily debug into WPF sources when setting a breakpoint in `ObservableRangeCollection.OnCollectionChanged` and stepping into  `handler(this, e);`
     (Maybe your IDE has to be configured to allow stepping into different sources).
+
+**Tip**: If you want to ensure local WPF sources are used with this test app, find the `Window.cs` in `PresentationFramework` and add a MessageBox to the Show method.
