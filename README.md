@@ -1,6 +1,7 @@
 # ObservableRangeWpfTestApp
 
 This is a small app to test INotifyCollectionChanged notifications with ranges for WPF.
+Mainly created to test this PR to WPF: https://github.com/dotnet/wpf/pull/9568
 
 - It requires .NET 9 (previews).
 The range operations Add/Remove/Replace currently throw an exception that range operations are not supported.
