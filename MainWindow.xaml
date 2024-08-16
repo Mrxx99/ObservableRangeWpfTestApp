@@ -9,18 +9,30 @@
         Title="MainWindow" Height="450" Width="800">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
-            <Button Content="Add Item" Command="{Binding AddItemCommand}"/>
-            <Button Content="Add Items Range" Command="{Binding AddItemsRangeCommand}"/>
-            <Button Content="Remove Item" Command="{Binding RemoveItemCommand}"/>
-            <Button Content="Remove Items Range" Command="{Binding RemoveItemsRangeCommand}"/>
-            <Button Content="Replace Item" Command="{Binding ReplaceItemCommand}"/>
-            <Button Content="Replace Items Range" Command="{Binding ReplaceItemsRangeCommand}"/>
-            <CheckBox Content="Enable collection synchronization" IsChecked="{Binding EnableCollectionSynchronization}"/>
+            <UniformGrid Columns="2">
+                <Button Content="Add Item" Command="{Binding AddItemCommand}"/>
+                <Button Content="Add Items Range" Command="{Binding AddItemsRangeCommand}"/>
+                <Button Content="Remove Item" Command="{Binding RemoveItemCommand}"/>
+                <Button Content="Remove Items Range" Command="{Binding RemoveItemsRangeCommand}"/>
+                <Button Content="Replace Item" Command="{Binding ReplaceItemCommand}"/>
+                <Button Content="Replace Items Range" Command="{Binding ReplaceItemsRangeCommand}"/>
+                <Button Content="Clear Items" Command="{Binding ClearItemsCommand}"/>
+            </UniformGrid>
+            <UniformGrid Columns="2">
+                <CheckBox Content="Enable collection synchronization" IsChecked="{Binding EnableCollectionSynchronization}"/>
+                <CheckBox x:Name="EnableVirtualizationCheckBox" Content="Enable virtualization" IsChecked="True"/>
+                <CheckBox Content="Add sorting" IsChecked="{Binding EnableSorting}"/>
+                <CheckBox Content="Add filtering" IsChecked="{Binding EnableFiltering}"/>
+                <CheckBox Content="Add grouping" IsChecked="{Binding EnableGrouping}"/>
+            </UniformGrid>
         </StackPanel>
         <ListBox ItemsSource="{Binding ObservableItems}" Margin="10" 
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 VirtualizingPanel.IsVirtualizing="True"
+                 VirtualizingPanel.IsVirtualizing="{Binding ElementName=EnableVirtualizationCheckBox, Path=IsChecked}"
                  >
+            <ListBox.GroupStyle>
+                <GroupStyle />
+            </ListBox.GroupStyle>
             <!--<ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
