@@ -6,39 +6,74 @@
         xmlns:local="clr-namespace:ObservableRangeWpfTestApp"
         d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="800" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisiblityConverter"/>
+    </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
-            <UniformGrid Columns="2">
+            <UniformGrid Columns="2" Margin="10 0">
                 <Button Content="Add Item" Command="{Binding AddItemCommand}"/>
                 <Button Content="Add Items Range" Command="{Binding AddItemsRangeCommand}"/>
-                <Button Content="Remove Item" Command="{Binding RemoveItemCommand}"/>
+                <Button Content="Remove selected" Command="{Binding RemoveItemCommand}" IsEnabled="{Binding IsItemSelected}"/>
                 <Button Content="Remove Items Range" Command="{Binding RemoveItemsRangeCommand}"/>
-                <Button Content="Replace Item" Command="{Binding ReplaceItemCommand}"/>
+                <Button Content="Replace selected" Command="{Binding ReplaceItemCommand}" IsEnabled="{Binding IsItemSelected}"/>
                 <Button Content="Replace Items Range" Command="{Binding ReplaceItemsRangeCommand}"/>
                 <Button Content="Clear Items" Command="{Binding ClearItemsCommand}"/>
             </UniformGrid>
-            <UniformGrid Columns="2">
+            <UniformGrid Columns="3" Margin="10">
                 <CheckBox Content="Enable collection synchronization" IsChecked="{Binding EnableCollectionSynchronization}"/>
                 <CheckBox x:Name="EnableVirtualizationCheckBox" Content="Enable virtualization" IsChecked="True"/>
                 <CheckBox Content="Add sorting" IsChecked="{Binding EnableSorting}"/>
                 <CheckBox Content="Add filtering" IsChecked="{Binding EnableFiltering}"/>
                 <CheckBox Content="Add grouping" IsChecked="{Binding EnableGrouping}"/>
             </UniformGrid>
+            <GroupBox Padding="3" Margin="2">
+                <GroupBox.Header>
+                    <CheckBox x:Name="BindToCollectionViewCheckBox" Content="Bind to CollectionView" IsChecked="{Binding BindToCollectionView}"/>
+                </GroupBox.Header>
+                <UniformGrid Columns="3" IsEnabled="{Binding ElementName=BindToCollectionViewCheckBox, Path=IsChecked}">
+                    <CheckBox Content="Enable live sorting" IsChecked="{Binding EnableLiveSorting}"/>
+                    <CheckBox Content="Enable live filtering" IsChecked="{Binding EnableLiveFiltering}"/>
+                    <CheckBox Content="Enable live grouping" IsChecked="{Binding EnableLiveGrouping}"/>
+                </UniformGrid>
+            </GroupBox>
+            <StackPanel Orientation="Horizontal" Margin="10" IsEnabled="{Binding IsItemSelected}">
+                <ToggleButton x:Name="EditToggle" Content="Edit selected" Padding="5 0"/>
+                <TextBox Visibility="{Binding ElementName=EditToggle, Path=IsChecked, Converter={StaticResource BoolToVisiblityConverter}}" MinWidth="200" Text="{Binding ElementName=PersonListBox, Path=SelectedItem.Name}"/>
+                <TextBox Visibility="{Binding ElementName=EditToggle, Path=IsChecked, Converter={StaticResource BoolToVisiblityConverter}}" MinWidth="80" Text="{Binding ElementName=PersonListBox, Path=SelectedItem.Age}"/>
+            </StackPanel>
         </StackPanel>
-        <ListBox ItemsSource="{Binding ObservableItems}" Margin="10" 
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 VirtualizingPanel.IsVirtualizing="{Binding ElementName=EnableVirtualizationCheckBox, Path=IsChecked}"
-                 >
-            <ListBox.GroupStyle>
-                <GroupStyle />
-            </ListBox.GroupStyle>
-            <!--<ListBox.ItemsPanel>
+        <TabControl>
+            <TabItem Header="Items">
+                <ListBox x:Name="PersonListBox"
+                 ItemsSource="{Binding BindingSource}" Margin="10" 
+                 SelectedItem="{Binding SelectedItem}"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"       
+                 VirtualizingPanel.IsVirtualizing="{Binding ElementName=EnableVirtualizationCheckBox, Path=IsChecked}">
+                    <ListBox.GroupStyle>
+                        <GroupStyle />
+                    </ListBox.GroupStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                        <Run>#</Run><Run Text="{Binding Id}"/>
+                        <Run Text="{Binding Name}"/>
+                        <Run>(</Run><Run Text="{Binding Age}"/><Run>)</Run>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <!--<ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>-->
-        </ListBox>
+                </ListBox>
+            </TabItem>
+            <TabItem Header="Log">
+                <ListBox ItemsSource="{Binding Log}" />
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
 
